@@ -1,5 +1,4 @@
 #Chat(chatID*, blackListed, userID);
-#User(userID*, preferences, blocked);
 #Crypto(name*, price, time, articleRanking);
 
 #"cryptoDB.db"
@@ -32,22 +31,15 @@ def create_table(conn, create_table_sql):
         print(e)
         
 def main():
-    database = r"C:\Users\Ollye\OneDrive\Desktop\sqlite\db\cryptoDB.db"
-    
-    sql_create_user_table = """CREATE TABLE IF NOT EXISTS user (
-                                    userID integer PRIMARY KEY,
-                                    preferences String,
-                                    blocked boolean NOT NULL
-                                );"""
+    database = r"cryptoDB.db"
                                 
-    sql_create_chat_table = """ CREATE TABLE IF NOT EXISTS chat (
+    sql_create_chat_table = """ CREATE TABLE IF NOT EXISTS Chat (
                                         chatID integer PRIMARY KEY,
                                         blacklisted boolean NOT NULL,
-                                        userID integer NOT NULL,
-                                        FOREIGN KEY (userID) REFERENCES user (userID)
+                                        preferences [String]
                                     ); """
     
-    sql_create_crypto_table = """CREATE TABLE IF NOT EXISTS crypto (
+    sql_create_crypto_table = """CREATE TABLE IF NOT EXISTS CryptoCurrency (
                                     name string PRIMARY KEY,
                                     price float NOT NULL,
                                     time date NOT NULL,
@@ -59,8 +51,6 @@ def main():
     
     #create tables
     if conn is not None:
-        #create user table
-        create_table(conn, sql_create_user_table)
         
         #create chat table
         create_table(conn, sql_create_chat_table)
