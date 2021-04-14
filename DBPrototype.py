@@ -36,14 +36,14 @@ def main():
     sql_create_chat_table = """ CREATE TABLE IF NOT EXISTS Chat (
                                         chatID integer PRIMARY KEY,
                                         blacklisted boolean NOT NULL,
-                                        preferences [String]
+                                        preferences String
                                     ); """
     
     sql_create_crypto_table = """CREATE TABLE IF NOT EXISTS CryptoCurrency (
                                     name string PRIMARY KEY,
                                     price float NOT NULL,
                                     time date NOT NULL,
-                                    articleRanking [String]
+                                    articleRanking String
                                 );"""
     
     #create a database connection    
