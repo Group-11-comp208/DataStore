@@ -73,7 +73,6 @@ class Database:
         cur.execute(insertQuery, params)
         self.conn.commit()
         cur.close()
-        return cur.lastrowid
 
 
 database = Database("cryptoDB.db")
