@@ -3,6 +3,8 @@
 
 #"cryptoDB.db"
 
+#Ethan: i'd suggest making it into a class where the constructor takes the path to the database
+
 import sqlite3
 from sqlite3 import Error
 
@@ -32,8 +34,10 @@ class Database:
             
             #create crypto table
             self.create_table(conn, sql_create_crypto_table)
+
         else:
-            print("Error! cannot create the database connection.")   
+            print("Error! cannot create the database connection.")
+        
 
     def create_connection(self, db_file):
         """create a database connection to the SQLite database
@@ -56,6 +60,29 @@ class Database:
             c.execute(create_table_sql)
         except Error as e:
             print(e)
-            
+    
+    def insertIntoChat(self,chatID,blacklisted,preferences):
+        try:
+            insertQuery = """INSERT INTO Chat (chatID,blacklisted,preferences)
+                             VALUES({},{},{});""".format(chatID, blacklisted, preferences)
+        except Error as e:
+            print(e)
+
+        return insertQuery
+
+    def insertIntoCrypto(self,name,price,time,articleRanking):
+        try:
+            insertQuery = """INSERT INTO CryptoCurrency (name,price,time,articleRanking)
+                             VALUES({},{},{},{});""".format(name, price, time, articleRanking)
+        except Error as e:
+            print(e)
+
+        return insertQuery
+
+    def insert(self, conn, insertQuery):
+        cur = conn.cursor()
+        cur.execute(insertQuery)
+        conn.commit()
+        return cur.lastrowid
 
 database = Database("cryptoDB.db")
