@@ -52,7 +52,7 @@ class Database:
         except Error as e:
             print(e)
 
-    def insertIntoChat(self, chatID, blacklisted, preferences):
+    def insert_chat(self, chatID, blacklisted, preferences):
         params = [chatID, blacklisted, preferences]
         try:
             insertQuery = "INSERT INTO Chat (chatID,blacklisted,preferences) VALUES(?,?,?)"
@@ -60,7 +60,7 @@ class Database:
         except Error as e:
             print(e)
 
-    def insertIntoCrypto(self, name, price, time, articleRanking):
+    def insert_crypto_currency(self, name, price, time, articleRanking):
         params = [name, price, time, articleRanking]
         try:
             insertQuery = "INSERT INTO CryptoCurrency (name,price,time,articleRanking) VALUES(?,?,?,?)"
@@ -74,26 +74,24 @@ class Database:
         self.conn.commit()
         cur.close()
 
-    def getPrice(self,  name):
+    def get_price(self, name):
         cur = self.conn.cursor()
         cur.execute("SELECT price FROM CryptoCurrency WHERE name=?", (name,))
         rows = cur.fetchall()
+        return rows[0][0]
 
-        for row in rows:
-            print(row)
-
-    def viewCryptos(self):
+    def get_all_cyrpto_currencies(self):
         cur = self.conn.cursor()
         cur.execute("SELECT name FROM CryptoCurrency")
         rows = cur.fetchall()
 
         for row in rows:
-            print(row)
+            print(row[0])
 
 
 database = Database("cryptoDB.db")
-database.insertIntoChat(103, False, 'ethan')
-database.insertIntoCrypto("Bitcoin", 10.0, 2021-5-15, "ranking")
-database.insertIntoCrypto("Etherium", 20.0, 2021-6-16, "ranking")
-database.getPrice("Bitcoin")
-database.viewCryptos()
+#database.insertIntoChat(103, False, 'ethan')
+#database.insertIntoCrypto("Bitcoin", 10.0, 2021-5-15, "ranking")
+#database.insertIntoCrypto("Etherium", 20.0, 2021-6-16, "ranking")
+print(database.get_price("Bitcoin"))
+database.get_all_cyrpto_currencies()
