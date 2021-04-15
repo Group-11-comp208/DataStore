@@ -60,14 +60,6 @@ class Database:
         except Error as e:
             print(e)
 
-    def insert_crypto_currency(self, name, price, time, articleRanking):
-        params = [name, price, time, articleRanking]
-        try:
-            insert_query = "INSERT INTO CryptoCurrency (name,price,time,articleRanking) VALUES(?,?,?,?)"
-            self._insert(insert_query, params)
-        except Error as e:
-            print(e)
-
     def _insert(self, insert_query, params):
         cur = self.conn.cursor()
         cur.execute(insert_query, params)
@@ -83,12 +75,11 @@ class Database:
             cur.execute(fetch_query, params)
 
         rows = cur.fetchall()
+        cur.close()
         return rows
 
     def get_price(self, name):
-        cur = self.conn.cursor()
-        cur.execute("SELECT price FROM CryptoCurrency WHERE name=?", (name,))
-        rows = cur.fetchall()
+        rows = self._fetch("SELECT price FROM CryptoCurrency WHERE name=?", (name,))
         return rows[0][0]
 
     def get_all_cyrpto_currencies(self):
@@ -96,10 +87,29 @@ class Database:
         for row in rows:
             print(row[0])
 
+    def update_or_insert_crypto(self, name, price, time, articleRanking=""):
+        data = self._fetch(
+            "SELECT name FROM CryptoCurrency WHERE name=?", (name,))
+
+        if len(data) == 0:
+            params = [name, price, time, articleRanking]
+            try:
+                insert_query = "INSERT INTO CryptoCurrency (name,price,time,articleRanking) VALUES(?,?,?,?)"
+                self._insert(insert_query, params)
+            except Error as e:
+                print(e)
+        else:
+            update_params = [price, name]
+            try:
+                update_query = "UPDATE CryptoCurrency SET price = ? WHERE name=?"
+                self._insert(update_query, update_params)
+            except Error as e:
+                print(e)
+
 
 database = Database("cryptoDB.db")
 #database.insertIntoChat(103, False, 'ethan')
-database.insert_crypto_currency("Bitcoin", 10.0, 2021-5-15, "ranking")
+database.update_or_insert_crypto("Bitcoin", 1100.0, 2021-5-15)
 #database.insertIntoCrypto("Etherium", 20.0, 2021-6-16, "ranking")
 print(database.get_price("Bitcoin"))
 database.get_all_cyrpto_currencies()
