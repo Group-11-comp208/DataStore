@@ -82,8 +82,18 @@ class Database:
         for row in rows:
             print(row)
 
+    def viewCryptos(self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT name FROM CryptoCurrency")
+        rows = cur.fetchall()
+
+        for row in rows:
+            print(row)
+
 
 database = Database("cryptoDB.db")
 database.insertIntoChat(103, False, 'ethan')
 database.insertIntoCrypto("Bitcoin", 10.0, 2021-5-15, "ranking")
+database.insertIntoCrypto("Etherium", 20.0, 2021-6-16, "ranking")
 database.getPrice("Bitcoin")
+database.viewCryptos()
