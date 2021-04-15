@@ -52,7 +52,7 @@ class Database:
         except Error as e:
             print(e)
 
-    def insert_chat(self, chatID, blacklisted, preferences):
+    def insert_chat(self, chatID, blacklisted, preferences=""):
         params = [chatID, blacklisted, preferences]
         try:
             insert_query = "INSERT INTO Chat (chatID,blacklisted,preferences) VALUES(?,?,?)"
@@ -108,8 +108,3 @@ class Database:
 
 
 database = Database("cryptoDB.db")
-#database.insertIntoChat(103, False, 'ethan')
-database.update_or_insert_crypto("Bitcoin", 1100.0, 2021-5-15)
-#database.insertIntoCrypto("Etherium", 20.0, 2021-6-16, "ranking")
-print(database.get_price("Bitcoin"))
-database.get_all_cyrpto_currencies()
