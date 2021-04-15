@@ -74,6 +74,16 @@ class Database:
         self.conn.commit()
         cur.close()
 
+    def getPrice(self,  name):
+        cur = self.conn.cursor()
+        cur.execute("SELECT price FROM CryptoCurrency WHERE name=?", (name,))
+        rows = cur.fetchall()
+
+        for row in rows:
+            print(row)
+
 
 database = Database("cryptoDB.db")
-database.insertIntoChat(101, False, 'ethan')
+database.insertIntoChat(103, False, 'ethan')
+database.insertIntoCrypto("Bitcoin", 10.0, 2021-5-15, "ranking")
+database.getPrice("Bitcoin")
