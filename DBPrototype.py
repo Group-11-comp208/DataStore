@@ -79,13 +79,22 @@ class Database:
         return rows
 
     def get_price(self, name):
-        rows = self._fetch("SELECT price FROM CryptoCurrency WHERE name=?", (name,))
+        rows = self._fetch(
+            "SELECT price FROM CryptoCurrency WHERE name=?", (name,))
         return rows[0][0]
 
     def get_all_cyrpto_currencies(self):
         rows = self._fetch("SELECT name FROM CryptoCurrency")
         for row in rows:
             print(row[0])
+
+    def update_articles(self, name, articles):
+        update_params = [name, name]
+        try:
+            update_query = "UPDATE CryptoCurrency SET articleRanking = ? WHERE name=?"
+            self._insert(update_query, update_params)
+        except Error as e:
+            print(e)
 
     def update_or_insert_crypto(self, name, price, time, articleRanking=""):
         data = self._fetch(
@@ -108,3 +117,4 @@ class Database:
 
 
 database = Database("cryptoDB.db")
+# print(database.get_price('bitcoin'))
