@@ -1,7 +1,8 @@
 import sqlite3
 from sqlite3 import Error
-
-
+import sys
+sys.path.insert(1, '/home/ethanh/Desktop/twitter_rank')
+import ranking_algorithm
 class Database:
     def __init__(self, path):
         database = path
@@ -78,18 +79,29 @@ class Database:
         cur.close()
         return rows
 
+    def _to_string(self, arr):
+        return ",".join("'{}'".format(elem) for elem in arr)
+
+    def _from_string(self, raw):
+        return raw.split("','")
+
     def get_price(self, name):
         rows = self._fetch(
             "SELECT price FROM CryptoCurrency WHERE name=?", (name,))
         return rows[0][0]
 
+    def get_article(self, name):
+        rows = self._fetch(
+            "SELECT articleRanking FROM CryptoCurrency WHERE name=?", (name,))
+        return self._from_string(rows[0][0])
+
     def get_all_cyrpto_currencies(self):
         rows = self._fetch("SELECT name FROM CryptoCurrency")
-        for row in rows:
-            print(row[0])
+        return rows
 
-    def update_articles(self, name, articles):
-        update_params = [name, name]
+    def update_articles(self, name, articles_list):
+        articles = self._to_string(articles_list)
+        update_params = [articles, name]
         try:
             update_query = "UPDATE CryptoCurrency SET articleRanking = ? WHERE name=?"
             self._insert(update_query, update_params)
@@ -114,7 +126,3 @@ class Database:
                 self._insert(update_query, update_params)
             except Error as e:
                 print(e)
-
-
-database = Database("cryptoDB.db")
-# print(database.get_price('bitcoin'))
