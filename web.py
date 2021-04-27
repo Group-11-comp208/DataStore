@@ -9,7 +9,7 @@ except ImportError:
 
 class CoinCapWebSocket:
     def __init__(self):
-        self.database = Database("cryptoDB.db")
+        self.database = Database()
         websocket.enableTrace(True)
         ws = websocket.WebSocketApp("wss://ws.coincap.io/prices?assets=ALL",
                                 on_open = self.on_open,
