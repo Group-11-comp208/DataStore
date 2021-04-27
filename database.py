@@ -160,7 +160,29 @@ class Database:
         except IndexError:
             return False
 
-     #   print(coins)
+        coins_string = self._to_string_chat(coins)
+        update_params = [coins_string, chatID]
+        try:
+            update_query = "UPDATE Chat SET coins = ? WHERE chatID=?"
+            self._insert(update_query, update_params)
+            return True
+        except Error as e:
+            print(e)
+
+    def remove_chat_coins(self, chatID, coin):
+        data = self._fetch(
+            "SELECT coins FROM Chat WHERE chatID=?", (chatID,))
+        try:
+            if data[0][0] is not None:
+                coins = self._from_chat_string(data[0][0])
+        except IndexError:
+            return False
+
+        try:
+            self.get_price(coin)
+            coins.remove(coin)
+        except IndexError:
+            return False
 
         coins_string = self._to_string_chat(coins)
         update_params = [coins_string, chatID]
@@ -170,6 +192,7 @@ class Database:
             return True
         except Error as e:
             print(e)
+            return False
 
     def get_chat_coins(self):
         rows = self._fetch("SELECT coins, chatID FROM chat")
