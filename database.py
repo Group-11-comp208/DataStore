@@ -3,6 +3,7 @@ from sqlite3 import Error
 import sys
 sys.path.insert(1, '/home/ethanh/Desktop/twitter_rank')
 import ranking_algorithm
+import time
 class Database:
     def __init__(self, path):
         database = path
@@ -126,3 +127,16 @@ class Database:
                 self._insert(update_query, update_params)
             except Error as e:
                 print(e)
+
+
+"""database = Database("cryptoDB.db")
+fetch = ranking_algorithm.NewsFetch()
+
+coins = database.get_all_cyrpto_currencies()
+
+for coin in coins:
+    name = coin[0]
+    articles = fetch.get_articles(name)
+    database.update_articles(name, articles)
+    print("Updating news for {}".format(name))
+    time.sleep(1)"""
