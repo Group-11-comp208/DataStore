@@ -55,8 +55,13 @@ class CoinCapWebSocket:
         thread.start_new_thread(run, ())
 
     def telegram_bot_sendtext(self, chatID, name, change, value):
+        text = ""
+        if (change > 0):
+            text = "up"
+        else:
+            text = "down"
         bot = telegram.Bot(token='1543822532:AAEQJRD2-diWs0hCUSrVA8KqlDYkg-NV0_0')
-        bot.sendMessage(chat_id=chatID, text="*Price alert*\n{} has changed by {:.2f}% to ${}".format(name,change,value), parse_mode=telegram.ParseMode.MARKDOWN)
+        bot.sendMessage(chat_id=chatID, text="*Price alert*\n{} is {} by {:.2f}% \nCurrent Price: ${}".format(name,text,change,value), parse_mode=telegram.ParseMode.MARKDOWN)
 
 web = CoinCapWebSocket()
 
