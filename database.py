@@ -206,6 +206,12 @@ class Database:
             if coin in coins:
                 chats_to_update.append(row[1])
         return chats_to_update
+
+    def get_chat_coins_prefs(self, chatID):
+        data = self._fetch(
+            "SELECT coins FROM Chat WHERE chatID=?", (chatID,))
+        coins_list = self._from_chat_string(data[0][0])
+        return coins_list
        
 
 """database = Database()
