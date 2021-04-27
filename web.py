@@ -29,7 +29,7 @@ class CoinCapWebSocket:
             try:
                 current_price = self.database.get_price(key)
                 change = (current_price - float(value))/100
-                if abs(change) > 1:
+                if abs(change) > 0.1:
                     print("Updating price for {}".format(key))
                     self.database.update_or_insert_crypto(key,value,t)
                     chats = self.database.should_update(key)
@@ -56,7 +56,7 @@ class CoinCapWebSocket:
 
     def telegram_bot_sendtext(self, chatID, name, change, value):
         bot = telegram.Bot(token='1543822532:AAEQJRD2-diWs0hCUSrVA8KqlDYkg-NV0_0')
-        bot.sendMessage(chat_id=chatID, text="{} has changed by {:.2f}% to ${}".format(name,change,value))
+        bot.sendMessage(chat_id=chatID, text="*Price alert*\n{} has changed by {:.2f}% to ${}".format(name,change,value), parse_mode=telegram.ParseMode.MARKDOWN)
 
 web = CoinCapWebSocket()
 
