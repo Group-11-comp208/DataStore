@@ -170,9 +170,23 @@ class Database:
             return True
         except Error as e:
             print(e)
+
+    def get_chat_coins(self):
+        rows = self._fetch("SELECT coins, chatID FROM chat")
+        return rows
+
+    def should_update(self, coin):
+        rows = self.get_chat_coins()
+        chats_to_update = []
+        for row in rows:
+            coins = set(self._from_chat_string(row[0]))
+            if coin in coins:
+                chats_to_update.append(row[1])
+        return chats_to_update
        
 
-#database = Database()
+"""database = Database()
+print(database.should_update("bitcoin"))"""
 
 #coins = database.get_all_cyrpto_currencies()
 
