@@ -28,7 +28,7 @@ class CoinCapWebSocket:
             t = time.time() * 1000
             try:
                 current_price = self.database.get_price(key)
-                change = (current_price - float(value))/100
+                change = (float(value) - current_price)/100
                 if abs(change) > 0.1:
                     print("Updating price for {}".format(key))
                     self.database.update_or_insert_crypto(key,value,t)
