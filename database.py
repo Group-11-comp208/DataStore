@@ -2,17 +2,20 @@ import sqlite3
 from sqlite3 import Error
 import sys
 sys.path.insert(1, '/home/ethanh/Desktop/twitter_rank')
-import ranking_algorithm
+#import ranking_algorithm
 import time
+import ast
+
 class Database:
-    def __init__(self, path):
+    def __init__(self, path="python_bot_database.db"):
         database = path
-        sql_create_chat_table = """CREATE TABLE IF NOT EXISTS Chat (
+        chat_table = """CREATE TABLE IF NOT EXISTS Chat (
                                             chatID integer PRIMARY KEY,
                                             blacklisted boolean NOT NULL,
-                                            preferences TEXT
+                                            coins TEXT,
+                                            currency TEXT
                                         );"""
-        sql_create_crypto_table = """CREATE TABLE IF NOT EXISTS CryptoCurrency (
+        crypto_currency_table = """CREATE TABLE IF NOT EXISTS CryptoCurrency (
                                         name TEXT PRIMARY KEY,
                                         price float NOT NULL,
                                         time date NOT NULL,
@@ -25,8 +28,8 @@ class Database:
         # create tables
         if self.conn is not None:
 
-            self.create_table(sql_create_chat_table)
-            self.create_table(sql_create_crypto_table)
+            self.create_table(chat_table)
+            self.create_table(crypto_currency_table)
 
         else:
             print("Error! cannot create the database connection.")
@@ -54,13 +57,17 @@ class Database:
         except Error as e:
             print(e)
 
-    def insert_chat(self, chatID, blacklisted, preferences=""):
-        params = [chatID, blacklisted, preferences]
-        try:
-            insert_query = "INSERT INTO Chat (chatID,blacklisted,preferences) VALUES(?,?,?)"
-            self._insert(insert_query, params)
-        except Error as e:
-            print(e)
+    def _to_string(self, arr):
+        return ",".join("'{}'".format(elem) for elem in arr)
+
+    def _from_string(self, raw):
+        return raw.split("','")
+
+    def _to_string_chat(self, arr):
+         return ','.join(arr)
+
+    def _from_chat_string(self, raw):
+        return raw.split(",")
 
     def _insert(self, insert_query, params):
         cur = self.conn.cursor()
@@ -79,12 +86,6 @@ class Database:
         rows = cur.fetchall()
         cur.close()
         return rows
-
-    def _to_string(self, arr):
-        return ",".join("'{}'".format(elem) for elem in arr)
-
-    def _from_string(self, raw):
-        return raw.split("','")
 
     def get_price(self, name):
         rows = self._fetch(
@@ -128,13 +129,54 @@ class Database:
             except Error as e:
                 print(e)
 
+    def insert_chat(self, chatID, blacklisted):
+        params = [chatID, blacklisted]
+        data = self._fetch(
+            "SELECT chatID FROM Chat WHERE chatID=?", (chatID,))
+        if (len(data) == 0):
+            try:
+                insert_query = "INSERT INTO Chat (chatID,blacklisted) VALUES(?,?)"
+                self._insert(insert_query, params)
+            except Error as e:
+                print(e)
+            return True
+        else:
+            return False
 
-"""database = Database("cryptoDB.db")
-fetch = ranking_algorithm.NewsFetch()
+    def add_chat_coins(self, chatID, coin):
+        data = self._fetch(
+            "SELECT coins FROM Chat WHERE chatID=?", (chatID,))
+        try:
+            if data[0][0] is not None:
+                coins = self._from_chat_string(data[0][0])
+            else:
+                coins = []
+        except IndexError:
+            return False
 
-coins = database.get_all_cyrpto_currencies()
+        try:
+            self.get_price(coin)
+            coins.append(coin)
+        except IndexError:
+            return False
 
-for coin in coins:
+     #   print(coins)
+
+        coins_string = self._to_string_chat(coins)
+        update_params = [coins_string, chatID]
+        try:
+            update_query = "UPDATE Chat SET coins = ? WHERE chatID=?"
+            self._insert(update_query, update_params)
+            return True
+        except Error as e:
+            print(e)
+       
+
+#database = Database()
+
+#coins = database.get_all_cyrpto_currencies()
+
+"""for coin in coins:
     name = coin[0]
     articles = fetch.get_articles(name)
     database.update_articles(name, articles)
