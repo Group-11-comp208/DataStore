@@ -202,9 +202,10 @@ class Database:
         rows = self.get_chat_coins()
         chats_to_update = []
         for row in rows:
-            coins = set(self._from_chat_string(row[0]))
-            if coin in coins:
-                chats_to_update.append(row[1])
+            if row[0] is not None:
+                coins = set(self._from_chat_string(row[0]))
+                if coin in coins:
+                    chats_to_update.append(row[1])
         return chats_to_update
 
     def get_chat_coins_prefs(self, chatID):
