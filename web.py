@@ -17,6 +17,10 @@ class CoinCapWebSocket:
         self.database = Database()
         self.converter = Converter()
         self.coincap = coincap.CoinCap()
+        self.connect()
+        self.bot = telegram.Bot(token='1543822532:AAEQJRD2-diWs0hCUSrVA8KqlDYkg-NV0_0')
+
+    def connect(self):
         websocket.enableTrace(True)
         ws = websocket.WebSocketApp("wss://ws.coincap.io/prices?assets=ALL",
                                 on_open = self.on_open,
@@ -48,6 +52,9 @@ class CoinCapWebSocket:
 
     def on_close(self, ws):
         print("### closed ###")
+        time.sleep(15)
+        # Restart connection
+        self.connect()
 
     def on_open(self, ws):
         def run(*args):
@@ -70,7 +77,6 @@ class CoinCapWebSocket:
             text = "up"
         else:
             text = "down"
-        bot = telegram.Bot(token='1543822532:AAEQJRD2-diWs0hCUSrVA8KqlDYkg-NV0_0')
-        bot.sendMessage(chat_id=chatID, text="*Price alert*\n{} is {} by {:.2f}% \nCurrent Price: {}{:.2f}".format(name,text,change, currency_symbol, float(value) * rate), parse_mode=telegram.ParseMode.MARKDOWN)
+        self.bot.sendMessage(chat_id=chatID, text="*Price alert*\n{} is {} by {:.2f}% \nCurrent Price: {}{:.2f}".format(name,text,change, currency_symbol, float(value) * rate), parse_mode=telegram.ParseMode.MARKDOWN)
 
 web = CoinCapWebSocket()
