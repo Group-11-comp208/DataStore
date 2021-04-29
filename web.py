@@ -68,18 +68,6 @@ class CoinCapWebSocket:
         else:
             text = "down"
         bot = telegram.Bot(token='1543822532:AAEQJRD2-diWs0hCUSrVA8KqlDYkg-NV0_0')
-        bot.sendMessage(chat_id=chatID, text="*Price alert*\n{} is {} by {:.2f}% \nCurrent Price: {}{}".format(name,text,change, currency_symbol, float(value) * rate), parse_mode=telegram.ParseMode.MARKDOWN)
+        bot.sendMessage(chat_id=chatID, text="*Price alert*\n{} is {} by {:.2f}% \nCurrent Price: {}{:.2f}".format(name,text,change, currency_symbol, float(value) * rate), parse_mode=telegram.ParseMode.MARKDOWN)
 
 web = CoinCapWebSocket()
-
-
-"""database = Database("cryptoDB.db")
-coins = database.get_article('bitcoin')
-print(coins)
-
-print(database.get_article('bitcoin'))
-
-for coin in coins:
-    name = coin[0]
-    articles = fetch.get_articles(name)
-    database.update_articles(name, articles)"""
