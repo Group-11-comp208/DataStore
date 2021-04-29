@@ -1,8 +1,6 @@
 import sqlite3
 from sqlite3 import Error
 import sys
-sys.path.insert(1, '/home/ethanh/Desktop/twitter_rank')
-#import ranking_algorithm
 import time
 import ast
 
