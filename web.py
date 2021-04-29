@@ -58,7 +58,7 @@ class CoinCapWebSocket:
 
     def telegram_bot_sendtext(self, chatID, name, change, value):
         currency = self.database.get_currency(chatID)
-        currency_symbol = converter.get_symbol(currency)
+        currency_symbol = self.converter.get_symbol(currency)
         rate = 1
         if currency != "usd":
             rate = self.converter.get_rate(currency)
