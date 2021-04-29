@@ -29,7 +29,7 @@ class CoinCapWebSocket:
             try:
                 current_price = self.database.get_price(key)
                 change = (float(value) - current_price)/100
-                if abs(change) > 0.1:
+                if abs(change) >= 1:
                     print("Updating price for {}".format(key))
                     self.database.update_or_insert_crypto(key,value,t)
                     chats = self.database.should_update(key)
