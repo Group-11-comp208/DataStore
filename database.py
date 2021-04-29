@@ -130,12 +130,12 @@ class Database:
                 print(e)
 
     def insert_chat(self, chatID, blacklisted):
-        params = [chatID, blacklisted]
+        params = [chatID, blacklisted, "usd"]
         data = self._fetch(
             "SELECT chatID FROM Chat WHERE chatID=?", (chatID,))
         if (len(data) == 0):
             try:
-                insert_query = "INSERT INTO Chat (chatID,blacklisted) VALUES(?,?)"
+                insert_query = "INSERT INTO Chat (chatID,blacklisted,currency) VALUES(?,?,?)"
                 self._insert(insert_query, params)
             except Error as e:
                 print(e)
@@ -213,7 +213,20 @@ class Database:
             "SELECT coins FROM Chat WHERE chatID=?", (chatID,))
         coins_list = self._from_chat_string(data[0][0])
         return coins_list
-       
+
+    def set_currency(self, currency, chatID):
+        update_params = [currency, chatID]
+        try:
+            update_query = "UPDATE chat SET currency = ? WHERE chatID=?"
+            self._insert(update_query, update_params)
+        except Error as e:
+            print(e)
+
+    def get_currency(self, chatID):
+        data = self._fetch(
+            "SELECT currency FROM Chat WHERE chatID=?", (chatID,))
+        if (len(data) > 0):
+            return data[0][0]
 
 """database = Database()
 print(database.should_update("bitcoin"))"""
