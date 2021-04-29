@@ -5,6 +5,7 @@ import time
 import requests
 import telegram
 from fx import Converter
+import coincap
 
 try:
     import thread
@@ -15,6 +16,7 @@ class CoinCapWebSocket:
     def __init__(self):
         self.database = Database()
         self.converter = Converter()
+        self.coincap = coincap.CoinCap()
         websocket.enableTrace(True)
         ws = websocket.WebSocketApp("wss://ws.coincap.io/prices?assets=ALL",
                                 on_open = self.on_open,
@@ -56,9 +58,10 @@ class CoinCapWebSocket:
             print("thread terminating...")
         thread.start_new_thread(run, ())
 
-    def telegram_bot_sendtext(self, chatID, name, change, value):
+    def telegram_bot_sendtext(self, chatID, asset, change, value):
         currency = self.database.get_currency(chatID)
         currency_symbol = self.converter.get_symbol(currency)
+        name = self.coincap.get_asset(asset)['name']
         rate = 1
         if currency != "usd":
             rate = self.converter.get_rate(currency)
