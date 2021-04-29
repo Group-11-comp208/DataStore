@@ -4,6 +4,7 @@ import sys
 import time
 import ast
 
+
 class Database:
     def __init__(self, path="python_bot_database.db"):
         database = path
@@ -62,7 +63,7 @@ class Database:
         return raw.split("','")
 
     def _to_string_chat(self, arr):
-         return ','.join(arr)
+        return ','.join(arr)
 
     def _from_chat_string(self, raw):
         return raw.split(",")
@@ -225,15 +226,3 @@ class Database:
             "SELECT currency FROM Chat WHERE chatID=?", (chatID,))
         if (len(data) > 0):
             return data[0][0]
-
-"""database = Database()
-print(database.should_update("bitcoin"))"""
-
-#coins = database.get_all_cyrpto_currencies()
-
-"""for coin in coins:
-    name = coin[0]
-    articles = fetch.get_articles(name)
-    database.update_articles(name, articles)
-    print("Updating news for {}".format(name))
-    time.sleep(1)"""

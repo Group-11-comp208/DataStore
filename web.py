@@ -12,6 +12,7 @@ try:
 except ImportError:
     import _thread as thread
 
+
 class CoinCapWebSocket:
     def __init__(self):
         self.database = Database()
@@ -22,10 +23,10 @@ class CoinCapWebSocket:
     def connect(self):
         websocket.enableTrace(True)
         ws = websocket.WebSocketApp("wss://ws.coincap.io/prices?assets=ALL",
-                                on_open = self.on_open,
-                                on_message = self.on_message,
-                                on_error = self.on_error,
-                                on_close = self.on_close)
+                                    on_open=self.on_open,
+                                    on_message=self.on_message,
+                                    on_error=self.on_error,
+                                    on_close=self.on_close)
 
         ws.run_forever()
 
@@ -38,13 +39,13 @@ class CoinCapWebSocket:
                 change = ((float(value) - current_price)/current_price) * 100
                 if abs(change) >= 1:
                     print("Updating price for {}".format(key))
-                    self.database.update_or_insert_crypto(key,value,t)
+                    self.database.update_or_insert_crypto(key, value, t)
                     chats = self.database.should_update(key)
                     for chat in chats:
                         self.telegram_bot_sendtext(chat, key, change, value)
             except IndexError:
                 print("Inserting new price for {}".format(key))
-                self.database.update_or_insert_crypto(key,value,t)
+                self.database.update_or_insert_crypto(key, value, t)
 
     def on_error(self, ws, error):
         print(error)
@@ -65,7 +66,8 @@ class CoinCapWebSocket:
         thread.start_new_thread(run, ())
 
     def telegram_bot_sendtext(self, chatID, asset, change, value):
-        bot = telegram.Bot(token='1543822532:AAEQJRD2-diWs0hCUSrVA8KqlDYkg-NV0_0')
+        bot = telegram.Bot(
+            token='1543822532:AAEQJRD2-diWs0hCUSrVA8KqlDYkg-NV0_0')
         currency = self.database.get_currency(chatID)
         currency_symbol = self.converter.get_symbol(currency)
         name = self.coincap.get_asset(asset)['name']
@@ -77,6 +79,8 @@ class CoinCapWebSocket:
             text = "up"
         else:
             text = "down"
-        bot.sendMessage(chat_id=chatID, text="*Price alert*\n{} is {} by {:.2f}% \nCurrent Price: {}{:.2f}".format(name,text,change, currency_symbol, float(value) * rate), parse_mode=telegram.ParseMode.MARKDOWN)
+        bot.sendMessage(chat_id=chatID, text="*Price alert*\n{} is {} by {:.2f}% \nCurrent Price: {}{:.2f}".format(
+            name, text, change, currency_symbol, float(value) * rate), parse_mode=telegram.ParseMode.MARKDOWN)
+
 
 web = CoinCapWebSocket()
