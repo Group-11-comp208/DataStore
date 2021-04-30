@@ -226,3 +226,8 @@ class Database:
             "SELECT currency FROM Chat WHERE chatID=?", (chatID,))
         if (len(data) > 0):
             return data[0][0]
+
+    def get_all_chats(self):
+        data = self._fetch(
+            "SELECT ChatID FROM Chat")
+        return data
