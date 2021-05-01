@@ -79,7 +79,7 @@ class CoinCapWebSocket:
             text = "up"
         else:
             text = "down"
-        bot.sendMessage(chat_id=chatID, text="*Price alert*\n{} is {} by {:.2f}% \nCurrent Price: {}{:.2f}".format(
+        bot.sendMessage(chat_id=chatID, text="*Price alert*\n{} is {} by {:.2f}% \nCurrent Price: {}{:,.2f}".format(
             name, text, change, currency_symbol, float(value) * rate), parse_mode=telegram.ParseMode.MARKDOWN)
 
 
