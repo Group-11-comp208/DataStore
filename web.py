@@ -36,13 +36,14 @@ class CoinCapWebSocket:
             t = time.time() * 1000
             try:
                 current_price = self.database.get_price(key)
-                change = ((float(value) - current_price)/current_price) * 100
-                if abs(change) >= 1:
-                    print("Updating price for {}".format(key))
-                    self.database.update_or_insert_crypto(key, value, t)
-                    chats = self.database.should_update(key)
-                    for chat in chats:
-                        self.telegram_bot_sendtext(chat, key, change, value)
+                if current_price != 0:
+                    change = ((float(value) - current_price)/current_price) * 100
+                    if abs(change) >= 1:
+                        print("Updating price for {}".format(key))
+                        self.database.update_or_insert_crypto(key, value, t)
+                        chats = self.database.should_update(key)
+                        for chat in chats:
+                            self.telegram_bot_sendtext(chat, key, change, value)
             except IndexError:
                 print("Inserting new price for {}".format(key))
                 self.database.update_or_insert_crypto(key, value, t)
