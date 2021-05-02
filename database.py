@@ -180,7 +180,7 @@ class Database:
             return False
 
 
-        if len(data[0][0]) == 0:
+        if len(data[0][0]) <= 1:
             coins_string = None
         else:
             try:
