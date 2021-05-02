@@ -174,6 +174,8 @@ class Database:
         try:
             if data[0][0] is not None:
                 coins = self._from_chat_string(data[0][0])
+            else: 
+                return False
         except IndexError:
             return False
 
