@@ -177,13 +177,17 @@ class Database:
         except IndexError:
             return False
 
-        try:
-            self.get_price(coin)
-            coins.remove(coin)
-        except IndexError:
-            return False
 
-        coins_string = self._to_string_chat(coins)
+        if len(data[0][0]) == 1:
+            coins_string = None
+        else:
+            try:
+                self.get_price(coin)
+                coins.remove(coin)
+            except IndexError:
+                return False
+            coins_string = self._to_string_chat(coins)
+
         update_params = [coins_string, chatID]
         try:
             update_query = "UPDATE Chat SET coins = ? WHERE chatID=?"
