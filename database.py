@@ -210,8 +210,10 @@ class Database:
     def get_chat_coins_prefs(self, chatID):
         data = self._fetch(
             "SELECT coins FROM Chat WHERE chatID=?", (chatID,))
-        coins_list = self._from_chat_string(data[0][0])
-        return coins_list
+        if data[0][0] is not None:
+            coins_list = self._from_chat_string(data[0][0])
+            return coins_list
+        return None
 
     def set_currency(self, currency, chatID):
         update_params = [currency, chatID]
