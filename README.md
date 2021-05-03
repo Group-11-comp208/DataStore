@@ -4,8 +4,6 @@ Data such as chat preferences and crypto news needs to be stored for the bot
 
 ## Usage
 ```
-import sqlite3
-
 from database import Database
 database = Database(filepath)
 ```
